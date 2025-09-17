@@ -10,6 +10,7 @@ Sistema de almacenamiento. Gestor de archivos.
 
 * godotenv: manejo de archivos .env [link](https://github.com/joho/godotenv)
 * go/zap: Logs. [link](https://github.com/uber-go/zap)
+* gorm: ORM. [link](https://gorm.io/index.html)
 * gin: HTTP server framework. [link](https://github.com/gin-gonic/gin)
 * os: biblioteca nativa de golang para el manejo del sistema operativo. [link](https://pkg.go.dev/os)
 * sync: syncronización de gorutinas, etc.[link](https://pkg.go.dev/sync)
