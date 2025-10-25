@@ -52,11 +52,14 @@ func InitializeDatabaseDriver(driverStr, connectionString string) databaseInitia
 		loader = MySqlLoader{}
 	case "mariadb":
 		systemDriver = MariaDb
+		loader = MySqlLoader{}
+
 	case "oracle":
 		systemDriver = Oracle
 
 	case "postgres":
 		systemDriver = Postgres
+		loader = PostgresLoader{}
 
 	case "sqlserver":
 		systemDriver = SqlServer
