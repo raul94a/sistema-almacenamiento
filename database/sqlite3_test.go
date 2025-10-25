@@ -17,8 +17,9 @@ func TestSqlite3_Init(t *testing.T) {
 	if db == nil {
 		t.Errorf("Error initializing database")
 	}
+	sqliteDb, _ := db.DB()
 
-	if err := db.Ping(); err != nil {
+	if err := sqliteDb.Ping(); err != nil {
 		t.Errorf("TestSqlite3_Init error: %v",err)
 	}
 
