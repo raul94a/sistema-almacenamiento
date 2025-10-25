@@ -15,23 +15,16 @@
 package database
 
 import (
-	"database/sql"
-
-	_"github.com/mattn/go-sqlite3"
+ "gorm.io/driver/sqlite" // Sqlite driver based on CGO
+  // "github.com/glebarez/sqlite" // Pure go SQLite driver, checkout https://github.com/glebarez/sqlite for details
+  "gorm.io/gorm"
 
 )
 
 type SqliteLoader struct{}
 
-func (m SqliteLoader) LoadDatabase(connectionString string) (*sql.DB, error) {
+func (m SqliteLoader) LoadDatabase(connectionString string) (*gorm.DB, error) {
 	// EXAMPLE file:test.db?cache=shared&mode=memory
+	return  gorm.Open(sqlite.Open(connectionString), &gorm.Config{})
 
-	db, err := sql.Open("sqlite3",connectionString)
-
-	if err != nil {
-		panic(err)
-	}
-	// See "Important settings" section.
-	// https://github.com/go-sql-driver/mysql
-	return db, err
 }

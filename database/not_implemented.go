@@ -15,13 +15,13 @@
 package database
 
 import (
-	"database/sql"
+  	"gorm.io/gorm"
 	"fmt"
 )
 
 type NotImplementedLoader struct {
 }
 
-func (n NotImplementedLoader) LoadDatabase(connectionString string) (*sql.DB, error) {
+func (n NotImplementedLoader) LoadDatabase(connectionString string) (*gorm.DB, error) {
 	return nil, fmt.Errorf("not implemented driver")
 }

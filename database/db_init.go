@@ -15,8 +15,9 @@
 package database
 
 import (
-	"database/sql"
 	"strings"
+
+	"gorm.io/gorm"
 )
 
 /* The types of db drivers the app can handle */
@@ -74,8 +75,8 @@ func InitializeDatabaseDriver(driverStr, connectionString string) databaseInitia
 
 // This method from databaseInitializer will gracefully handle the driver
 // that will connect the app to the database.
-func (initializer *databaseInitializer) InitDatabase() *sql.DB {
-	var db *sql.DB
+func (initializer *databaseInitializer) InitDatabase() *gorm.DB {
+	var db *gorm.DB
 
 	db, err := initializer.Loader.LoadDatabase(initializer.ConnectionString)
 	if err != nil {

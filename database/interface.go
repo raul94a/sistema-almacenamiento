@@ -15,9 +15,9 @@
 package database
 
 import (
-	"database/sql"
+  "gorm.io/gorm"
 )
 
 type DatabaseLoader interface {
-	LoadDatabase(connectionString string) (*sql.DB, error)
+	LoadDatabase(connectionString string) (*gorm.DB, error)
 }

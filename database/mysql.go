@@ -15,18 +15,12 @@
 package database
 
 import (
-	"database/sql"
-	_ "github.com/go-sql-driver/mysql"
+	"gorm.io/driver/mysql"
+  	"gorm.io/gorm"
 )
 
 type MySqlLoader struct{}
 
-func (m MySqlLoader) LoadDatabase(connectionString string) (*sql.DB, error) {
-	db, err := sql.Open("mysql", connectionString)
-	if err != nil {
-		panic(err)
-	}
-	// See "Important settings" section.
-	// https://github.com/go-sql-driver/mysql
-	return db, err
+func (m MySqlLoader) LoadDatabase(connectionString string) (*gorm.DB, error) {
+  	return gorm.Open(mysql.Open(connectionString), &gorm.Config{})
 }
