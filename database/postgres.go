@@ -15,17 +15,14 @@
 package database
 
 import (
- "gorm.io/driver/sqlite" // Sqlite driver based on CGO
-  // "github.com/glebarez/sqlite" // Pure go SQLite driver, checkout https://github.com/glebarez/sqlite for details
+	"gorm.io/driver/postgres" // Sqlite driver based on CGO
   "gorm.io/gorm"
-
 )
 
-type SqliteLoader struct{}
+type PostgresLoader struct{}
 
-func (m SqliteLoader) LoadDatabase(connectionString string) (*gorm.DB, error) {
-	// EXAMPLE file:test.db?cache=shared&mode=memory
-
-	return  gorm.Open(sqlite.Open(connectionString), &gorm.Config{})
+func (m PostgresLoader) LoadDatabase(connectionString string) (*gorm.DB, error) {
+	// dsn := "host=localhost user=gorm password=gorm dbname=gorm port=9920 sslmode=disable TimeZone=Asia/Shanghai"
+	return  gorm.Open(postgres.Open(connectionString), &gorm.Config{})
 
 }
