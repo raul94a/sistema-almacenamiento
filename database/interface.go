@@ -20,4 +20,7 @@ import (
 
 type DatabaseLoader interface {
 	LoadDatabase(connectionString string) (*gorm.DB, error)
+	BuildDsn(env *Env) (error, string)
+	// Testing
+	BuildDsnFromEnv(path string) (error, string)
 }

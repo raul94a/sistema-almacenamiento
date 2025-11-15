@@ -6,8 +6,11 @@ import
 )
 
 func TestPostgresInitialization(t *testing.T) {
-	postgresDriver := "postgres"
-	initializer := InitializeDatabaseDriver(postgresDriver,testConnStr)
+	env := &Env{
+		DatabaseType: "postgres",
+	}
+	initializer := InitializeDatabaseDriver(env)
+	
 
 	loader := initializer.Loader
 	if l, ok := loader.(PostgresLoader); ok {
@@ -16,3 +19,4 @@ func TestPostgresInitialization(t *testing.T) {
     	t.Errorf("TestMySqlInitialization failed. loader type is %T", l) 
 	}
 }
+

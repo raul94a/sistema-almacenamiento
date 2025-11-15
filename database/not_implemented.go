@@ -25,3 +25,12 @@ type NotImplementedLoader struct {
 func (n NotImplementedLoader) LoadDatabase(connectionString string) (*gorm.DB, error) {
 	return nil, fmt.Errorf("not implemented driver")
 }
+
+func (m NotImplementedLoader) BuildDsn(env *Env) (error, string) {
+	return fmt.Errorf("Not implemented driver"), ""
+}
+
+func (m NotImplementedLoader) BuildDsnFromEnv(path string)(error, string){
+	return fmt.Errorf("Not implemented driver"), ""
+}
+
