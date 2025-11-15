@@ -53,7 +53,7 @@ func (m MySqlLoader) BuildDsn(env *DatabaseConfig) (error, string) {
 // Testing
 func (m MySqlLoader) BuildDsnFromEnv(path string) (error, string) {
 	fmt.Printf("MysqlLoader BuildDsnFromEnv %s\n", path)
-	env := LoadDatabaseEnvVariables(path)
+	env := LoadDatabaseConfigFromEnv(path)
 	if len(env.DatabaseUrl) == 0 || len(env.DatabaseUrl) == 0 {
 		panic(fmt.Errorf("Env file not loaded"))
 	}

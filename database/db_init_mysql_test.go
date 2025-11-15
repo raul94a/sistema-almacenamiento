@@ -46,7 +46,7 @@ func TestMySqlInitialization(t *testing.T) {
 }
 
 func TestMySql_Env_Connection_String(t *testing.T) {
-	env := LoadDatabaseEnvVariables("./.mysql")
+	env := LoadDatabaseConfigFromEnv("./.mysql")
 	initializer := InitializeDatabaseDriver(env)
 	loader := initializer.Loader
 

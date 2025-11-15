@@ -102,7 +102,7 @@ func (initializer *databaseInitializer) InitDatabase() *gorm.DB {
 
 func GetDatabase() *gorm.DB {
 	godotenv.Load(".env")
-	env := LoadDatabaseEnvVariables(".env")
+	env := LoadDatabaseConfigFromEnv(".env")
 	initializer := InitializeDatabaseDriver(env)
 	return initializer.InitDatabase()
 }

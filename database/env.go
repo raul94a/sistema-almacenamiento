@@ -2,6 +2,7 @@ package database
 
 import (
 	"os"
+
 	"github.com/joho/godotenv"
 )
 
@@ -14,7 +15,7 @@ type DatabaseConfig struct {
 	DatabaseName     string
 }
 
-func LoadDatabaseEnvVariables(path string) *DatabaseConfig {
+func LoadDatabaseConfigFromEnv(path string) *DatabaseConfig {
 	godotenv.Load(path)
 	dbType := os.Getenv("DATABASE_TYPE")
 	url := os.Getenv("DATABASE_URL")
