@@ -91,8 +91,6 @@ func InitializeDatabaseDriver(env *DatabaseConfig) databaseInitializer {
 // that will connect the app to the database.
 func (initializer *databaseInitializer) InitDatabase() *gorm.DB {
 	var db *gorm.DB
-	// Read env variables: driver + connection
-
 	db, err := initializer.Loader.LoadDatabase(initializer.ConnectionString)
 	if err != nil {
 		panic(err)
@@ -106,13 +104,3 @@ func GetDatabase() *gorm.DB {
 	initializer := InitializeDatabaseDriver(env)
 	return initializer.InitDatabase()
 }
-
-/*
-	Reglas:
-	1. Utilizar solo un método que cargue la base de datos configurada con el entorno -InitDatabase-
-
-	Pasos:
-	1. Carga del .env
-	2. Connection to database -LoaderDatabase
-
-*/
