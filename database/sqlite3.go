@@ -29,3 +29,11 @@ func (m SqliteLoader) LoadDatabase(connectionString string) (*gorm.DB, error) {
 	return  gorm.Open(sqlite.Open(connectionString), &gorm.Config{})
 
 }
+func (m SqliteLoader) BuildDsn(env *Env) (error, string) {
+	return nil, ""
+}
+
+func (m SqliteLoader) BuildDsnFromEnv(path string)(error, string){
+		return nil, ""
+}
+

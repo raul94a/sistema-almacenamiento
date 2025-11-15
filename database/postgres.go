@@ -26,3 +26,13 @@ func (m PostgresLoader) LoadDatabase(connectionString string) (*gorm.DB, error) 
 	return  gorm.Open(postgres.Open(connectionString), &gorm.Config{})
 
 }
+func (m PostgresLoader) BuildDsn(env *Env) (error, string) {
+	return nil, ""
+
+}
+
+func (m PostgresLoader) BuildDsnFromEnv(path string)(error, string){
+		return nil, ""
+
+}
+
