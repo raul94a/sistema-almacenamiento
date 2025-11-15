@@ -30,7 +30,7 @@ const (
 	Oracle    DatabaseDriver = "oracle"
 	SqlServer DatabaseDriver = "sqlserver"
 	MariaDb   DatabaseDriver = "mariadb"
-	Sqlite3   DatabaseDriver = "sqlite3"
+	Sqlite3   DatabaseDriver = "sqlite"
 )
 
 // Will handle the connection to the database
@@ -41,14 +41,14 @@ type databaseInitializer struct {
 	DatabaseConfig              *DatabaseConfig
 }
 
+
 func (d *databaseInitializer) load() (*gorm.DB,error){
 	cnf := d.DatabaseConfig
 	return d.Loader.LoadDatabase(cnf)
 }
 
-// TODO: Delete driverStr from the method signature.
-//
-//	This field will be read from .env file
+// Depending on the database config, usually read from a .env file,
+// the correct DatabaseLoader will be allocated.
 func InitializeDatabaseDriver(databaseConfig *DatabaseConfig) databaseInitializer {
 	driverStr := strings.ToLower(databaseConfig.DatabaseType)
 	var systemDriver DatabaseDriver
@@ -71,7 +71,7 @@ func InitializeDatabaseDriver(databaseConfig *DatabaseConfig) databaseInitialize
 		
 	case "sqlserver":
 		systemDriver = SqlServer
-	case "sqlite3":
+	case "sqlite": 
 		systemDriver = Sqlite3
 		loader = SqliteLoader{}
 		
@@ -85,7 +85,8 @@ func InitializeDatabaseDriver(databaseConfig *DatabaseConfig) databaseInitialize
 }
 
 // This method from databaseInitializer will gracefully handle the driver
-// that will connect the app to the database.
+// that will connect the app to the database. 
+// It needs a DatabaseConfig object to work
 func (initializer *databaseInitializer) InitDatabase() *gorm.DB {
 	var db *gorm.DB
 	db, err := initializer.load()
@@ -95,6 +96,12 @@ func (initializer *databaseInitializer) InitDatabase() *gorm.DB {
 	return db
 }
 
+// Entrypoint for creating a Database connection
+// It uses the required .env file located in the root directory.
+// 
+// The magic of loading different kind of databases resides in the
+// InitializeDatabaseDriver() method, which loads the correct driver
+//
 func GetDatabase() *gorm.DB {
 	godotenv.Load(".env")
 	env := LoadDatabaseConfigFromEnv(".env")
