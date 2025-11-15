@@ -22,9 +22,12 @@ import (
 
 type SqliteLoader struct{}
 
-func (m SqliteLoader) LoadDatabase(connectionString string) (*gorm.DB, error) {
+func (m SqliteLoader) LoadDatabase(databaseConfig *DatabaseConfig) (*gorm.DB, error) {
 	// EXAMPLE file:test.db?cache=shared&mode=memory
-
+	err, connectionString := m.BuildDsn(databaseConfig)
+	if err != nil {
+		panic(err)
+	}
 	return gorm.Open(sqlite.Open(connectionString), &gorm.Config{})
 
 }

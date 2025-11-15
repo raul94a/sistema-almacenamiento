@@ -41,7 +41,6 @@ func TestMySqlInitialization(t *testing.T) {
 		t.Errorf("TestMySqlInitialization failed. loader type is %T", l)
 	}
 
-	t.Log(initializer.ConnectionString)
 
 }
 

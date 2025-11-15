@@ -26,7 +26,11 @@ import (
 type MySqlLoader struct {
 }
 
-func (m MySqlLoader) LoadDatabase(connectionString string) (*gorm.DB, error) {
+func (m MySqlLoader) LoadDatabase(databaseConfig *DatabaseConfig) (*gorm.DB, error) {
+	err, connectionString := m.BuildDsn(databaseConfig)
+	if err != nil {
+		panic(err)
+	}
 	return gorm.Open(mysql.Open(connectionString), &gorm.Config{})
 }
 

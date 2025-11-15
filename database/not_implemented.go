@@ -23,7 +23,7 @@ import (
 type NotImplementedLoader struct {
 }
 
-func (n NotImplementedLoader) LoadDatabase(connectionString string) (*gorm.DB, error) {
+func (n NotImplementedLoader) LoadDatabase(databaseConfig *DatabaseConfig) (*gorm.DB, error) {
 	return nil, fmt.Errorf("not implemented driver")
 }
 

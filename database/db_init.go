@@ -38,52 +38,49 @@ const (
 type databaseInitializer struct {
 	Driver           DatabaseDriver
 	Loader           DatabaseLoader
-	ConnectionString string
-	Env              *DatabaseConfig
+	DatabaseConfig              *DatabaseConfig
+}
+
+func (d *databaseInitializer) load() (*gorm.DB,error){
+	cnf := d.DatabaseConfig
+	return d.Loader.LoadDatabase(cnf)
 }
 
 // TODO: Delete driverStr from the method signature.
 //
 //	This field will be read from .env file
-func InitializeDatabaseDriver(env *DatabaseConfig) databaseInitializer {
-	driverStr := strings.ToLower(env.DatabaseType)
+func InitializeDatabaseDriver(databaseConfig *DatabaseConfig) databaseInitializer {
+	driverStr := strings.ToLower(databaseConfig.DatabaseType)
 	var systemDriver DatabaseDriver
 	var loader DatabaseLoader = NotImplementedLoader{}
-	var connectionString string
-	var err error
 	switch driverStr {
 	case "mysql":
 		systemDriver = MySql
 		loader = MySqlLoader{}
-		err, connectionString = loader.BuildDsn(env)
+		
 	case "mariadb":
 		systemDriver = MariaDb
 		loader = MySqlLoader{}
-		err, connectionString = loader.BuildDsn(env)
+		
 	case "oracle":
 		systemDriver = Oracle
-		err, connectionString = loader.BuildDsn(env)
+		
 	case "postgres":
 		systemDriver = Postgres
 		loader = PostgresLoader{}
-		err, connectionString = loader.BuildDsn(env)
+		
 	case "sqlserver":
 		systemDriver = SqlServer
 	case "sqlite3":
 		systemDriver = Sqlite3
 		loader = SqliteLoader{}
-		err, connectionString = loader.BuildDsn(env)
-	}
-
-	if err != nil {
-		panic(err)
+		
 	}
 
 	return databaseInitializer{
 		Driver:           systemDriver,
-		ConnectionString: connectionString,
 		Loader:           loader,
-		Env:              env,
+		DatabaseConfig:              databaseConfig,
 	}
 }
 
@@ -91,7 +88,7 @@ func InitializeDatabaseDriver(env *DatabaseConfig) databaseInitializer {
 // that will connect the app to the database.
 func (initializer *databaseInitializer) InitDatabase() *gorm.DB {
 	var db *gorm.DB
-	db, err := initializer.Loader.LoadDatabase(initializer.ConnectionString)
+	db, err := initializer.load()
 	if err != nil {
 		panic(err)
 	}
