@@ -16,25 +16,30 @@ package database
 
 import (
 	"fmt"
+	"regexp"
+
 	"github.com/storage-system/database/patterns"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"regexp"
 )
 
 type MySqlLoader struct {
 }
 
-func (m MySqlLoader) LoadDatabase(connectionString string) (*gorm.DB, error) {
+func (m MySqlLoader) LoadDatabase(databaseConfig *DatabaseConfig) (*gorm.DB, error) {
+	err, connectionString := m.BuildDsn(databaseConfig)
+	if err != nil {
+		panic(err)
+	}
 	return gorm.Open(mysql.Open(connectionString), &gorm.Config{})
 }
 
-func (m MySqlLoader) buildDsnFromEnvStruct(env *Env) string {
+func (m MySqlLoader) buildDsnFromEnvStruct(env *DatabaseConfig) string {
 	return env.DatabaseUser + ":" + env.DatabasePassword + "@" + "tcp(" + env.DatabaseUrl + ":" + env.DatabasePort + ")" + "/" + env.DatabaseName
 
 }
 
-func (m MySqlLoader) BuildDsn(env *Env) (error, string) {
+func (m MySqlLoader) BuildDsn(env *DatabaseConfig) (error, string) {
 
 	mysqlPattern := patterns.CreateDSNPatterns().MySQL
 
@@ -52,7 +57,7 @@ func (m MySqlLoader) BuildDsn(env *Env) (error, string) {
 // Testing
 func (m MySqlLoader) BuildDsnFromEnv(path string) (error, string) {
 	fmt.Printf("MysqlLoader BuildDsnFromEnv %s\n", path)
-	env := LoadDatabaseEnvVariables(path)
+	env := LoadDatabaseConfigFromEnv(path)
 	if len(env.DatabaseUrl) == 0 || len(env.DatabaseUrl) == 0 {
 		panic(fmt.Errorf("Env file not loaded"))
 	}

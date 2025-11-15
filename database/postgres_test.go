@@ -1,22 +1,19 @@
 package database
 
-import
-(
+import (
 	"testing"
 )
 
 func TestPostgresInitialization(t *testing.T) {
-	env := &Env{
+	env := &DatabaseConfig{
 		DatabaseType: "postgres",
 	}
 	initializer := InitializeDatabaseDriver(env)
-	
 
 	loader := initializer.Loader
 	if l, ok := loader.(PostgresLoader); ok {
 		t.Log("TestMySqlInitialization PASSED")
 	} else {
-    	t.Errorf("TestMySqlInitialization failed. loader type is %T", l) 
+		t.Errorf("TestMySqlInitialization failed. loader type is %T", l)
 	}
 }
-

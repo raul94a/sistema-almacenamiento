@@ -15,12 +15,12 @@
 package database
 
 import (
-  "gorm.io/gorm"
+	"gorm.io/gorm"
 )
 
 type DatabaseLoader interface {
-	LoadDatabase(connectionString string) (*gorm.DB, error)
-	BuildDsn(env *Env) (error, string)
+	LoadDatabase(databaseConfig *DatabaseConfig) (*gorm.DB, error)
+	BuildDsn(databaseConfig *DatabaseConfig) (error, string)
 	// Testing
 	BuildDsnFromEnv(path string) (error, string)
 }
