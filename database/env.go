@@ -1,20 +1,20 @@
 package database
 
-import(
+import (
 	"os"
 	"github.com/joho/godotenv"
 )
 
-type Env struct {
-	DatabaseType string
-	DatabaseUrl string
-	DatabaseUser string
+type DatabaseConfig struct {
+	DatabaseType     string
+	DatabaseUrl      string
+	DatabaseUser     string
 	DatabasePassword string
-	DatabasePort string
-	DatabaseName string
+	DatabasePort     string
+	DatabaseName     string
 }
 
-func LoadDatabaseEnvVariables(path string) *Env {
+func LoadDatabaseEnvVariables(path string) *DatabaseConfig {
 	godotenv.Load(path)
 	dbType := os.Getenv("DATABASE_TYPE")
 	url := os.Getenv("DATABASE_URL")
@@ -22,13 +22,13 @@ func LoadDatabaseEnvVariables(path string) *Env {
 	user := os.Getenv("DATABASE_USER")
 	pwd := os.Getenv("DATABASE_PASSWORD")
 	dbName := os.Getenv("DATABASE_NAME")
-	return &Env{
-		DatabaseType: dbType,
-		DatabaseUrl: url,
-		DatabaseUser: user,
+	return &DatabaseConfig{
+		DatabaseType:     dbType,
+		DatabaseUrl:      url,
+		DatabaseUser:     user,
 		DatabasePassword: pwd,
-		DatabasePort: port,
-		DatabaseName: dbName,
+		DatabasePort:     port,
+		DatabaseName:     dbName,
 	}
-						
+
 }

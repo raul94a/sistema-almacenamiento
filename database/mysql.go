@@ -16,10 +16,11 @@ package database
 
 import (
 	"fmt"
+	"regexp"
+
 	"github.com/storage-system/database/patterns"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"regexp"
 )
 
 type MySqlLoader struct {
@@ -29,12 +30,12 @@ func (m MySqlLoader) LoadDatabase(connectionString string) (*gorm.DB, error) {
 	return gorm.Open(mysql.Open(connectionString), &gorm.Config{})
 }
 
-func (m MySqlLoader) buildDsnFromEnvStruct(env *Env) string {
+func (m MySqlLoader) buildDsnFromEnvStruct(env *DatabaseConfig) string {
 	return env.DatabaseUser + ":" + env.DatabasePassword + "@" + "tcp(" + env.DatabaseUrl + ":" + env.DatabasePort + ")" + "/" + env.DatabaseName
 
 }
 
-func (m MySqlLoader) BuildDsn(env *Env) (error, string) {
+func (m MySqlLoader) BuildDsn(env *DatabaseConfig) (error, string) {
 
 	mysqlPattern := patterns.CreateDSNPatterns().MySQL
 

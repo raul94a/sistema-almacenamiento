@@ -30,7 +30,7 @@ const (
 	Oracle    DatabaseDriver = "oracle"
 	SqlServer DatabaseDriver = "sqlserver"
 	MariaDb   DatabaseDriver = "mariadb"
-	Sqlite3  DatabaseDriver = "sqlite3"
+	Sqlite3   DatabaseDriver = "sqlite3"
 )
 
 // Will handle the connection to the database
@@ -39,13 +39,13 @@ type databaseInitializer struct {
 	Driver           DatabaseDriver
 	Loader           DatabaseLoader
 	ConnectionString string
-	Env				 *Env
+	Env              *DatabaseConfig
 }
 
-
 // TODO: Delete driverStr from the method signature.
-//		 This field will be read from .env file
-func InitializeDatabaseDriver(env *Env) databaseInitializer {
+//
+//	This field will be read from .env file
+func InitializeDatabaseDriver(env *DatabaseConfig) databaseInitializer {
 	driverStr := strings.ToLower(env.DatabaseType)
 	var systemDriver DatabaseDriver
 	var loader DatabaseLoader = NotImplementedLoader{}
@@ -78,13 +78,12 @@ func InitializeDatabaseDriver(env *Env) databaseInitializer {
 	if err != nil {
 		panic(err)
 	}
-	
-	
+
 	return databaseInitializer{
 		Driver:           systemDriver,
 		ConnectionString: connectionString,
 		Loader:           loader,
-		Env: 			  env,
+		Env:              env,
 	}
 }
 
@@ -93,7 +92,7 @@ func InitializeDatabaseDriver(env *Env) databaseInitializer {
 func (initializer *databaseInitializer) InitDatabase() *gorm.DB {
 	var db *gorm.DB
 	// Read env variables: driver + connection
-	
+
 	db, err := initializer.Loader.LoadDatabase(initializer.ConnectionString)
 	if err != nil {
 		panic(err)
@@ -101,12 +100,13 @@ func (initializer *databaseInitializer) InitDatabase() *gorm.DB {
 	return db
 }
 
-func GetDatabase() (*gorm.DB) {
+func GetDatabase() *gorm.DB {
 	godotenv.Load(".env")
 	env := LoadDatabaseEnvVariables(".env")
 	initializer := InitializeDatabaseDriver(env)
 	return initializer.InitDatabase()
 }
+
 /*
 	Reglas:
 	1. Utilizar solo un método que cargue la base de datos configurada con el entorno -InitDatabase-
@@ -114,5 +114,5 @@ func GetDatabase() (*gorm.DB) {
 	Pasos:
 	1. Carga del .env
 	2. Connection to database -LoaderDatabase
-	
+
 */

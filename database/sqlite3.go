@@ -15,10 +15,9 @@
 package database
 
 import (
- "gorm.io/driver/sqlite" // Sqlite driver based on CGO
-  // "github.com/glebarez/sqlite" // Pure go SQLite driver, checkout https://github.com/glebarez/sqlite for details
-  "gorm.io/gorm"
-
+	"gorm.io/driver/sqlite" // Sqlite driver based on CGO
+	// "github.com/glebarez/sqlite" // Pure go SQLite driver, checkout https://github.com/glebarez/sqlite for details
+	"gorm.io/gorm"
 )
 
 type SqliteLoader struct{}
@@ -26,14 +25,13 @@ type SqliteLoader struct{}
 func (m SqliteLoader) LoadDatabase(connectionString string) (*gorm.DB, error) {
 	// EXAMPLE file:test.db?cache=shared&mode=memory
 
-	return  gorm.Open(sqlite.Open(connectionString), &gorm.Config{})
+	return gorm.Open(sqlite.Open(connectionString), &gorm.Config{})
 
 }
-func (m SqliteLoader) BuildDsn(env *Env) (error, string) {
+func (m SqliteLoader) BuildDsn(env *DatabaseConfig) (error, string) {
 	return nil, ""
 }
 
-func (m SqliteLoader) BuildDsnFromEnv(path string)(error, string){
-		return nil, ""
+func (m SqliteLoader) BuildDsnFromEnv(path string) (error, string) {
+	return nil, ""
 }
-

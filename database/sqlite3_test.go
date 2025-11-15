@@ -9,7 +9,7 @@ func TestSqlite3_Init(t *testing.T) {
 	dbPath := "../test.db"
 	os.Remove(dbPath)
 
-	env := &Env{
+	env := &DatabaseConfig{
 		DatabaseType: "sqlite3",
 	}
 	initializer := InitializeDatabaseDriver(env)

@@ -10,7 +10,7 @@ var mysqlDriver string = "mysql"
 var sqliteDriver string = "sqlite3"
 
 func TestNotImplementedInitialization(t *testing.T) {
-	env := &Env{
+	env := &DatabaseConfig{
 		DatabaseType: testDriver,
 	}
 	initializer := InitializeDatabaseDriver(env)
@@ -24,13 +24,13 @@ func TestNotImplementedInitialization(t *testing.T) {
 }
 
 func TestMySqlInitialization(t *testing.T) {
-	env := &Env{
-		DatabaseType: mysqlDriver,
-		DatabaseUrl: "19.9.9.22",
-		DatabasePort: "9888",
-		DatabaseUser: "juser",
+	env := &DatabaseConfig{
+		DatabaseType:     mysqlDriver,
+		DatabaseUrl:      "19.9.9.22",
+		DatabasePort:     "9888",
+		DatabaseUser:     "juser",
 		DatabasePassword: "pwd",
-		DatabaseName: "db",
+		DatabaseName:     "db",
 	}
 	initializer := InitializeDatabaseDriver(env)
 
@@ -61,11 +61,11 @@ func TestMySql_Env_Connection_String(t *testing.T) {
 }
 
 func Test_Sqlite3_Initialization(t *testing.T) {
-env := &Env{
+	env := &DatabaseConfig{
 		DatabaseType: sqliteDriver,
 	}
 	initializer := InitializeDatabaseDriver(env)
-	
+
 	loader := initializer.Loader
 	if l, ok := loader.(SqliteLoader); ok {
 		t.Log("TestMySqlInitialization PASSED")
