@@ -1,0 +1,168 @@
+<!--AI GENERATED-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Almacenamiento | Lanzamiento en 1 Click con Go</title>
+    <meta name="description" content="SDK compilado en Go para almacenamiento distribuido. Ejecuta tu nodo en un solo comando. Integración CI/CD nativa.">
+    <link rel="stylesheet" href="public/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+</head>
+<body>
+    <div class="grid-bg"></div>
+    
+    <header>
+        <div class="container">
+            <nav class="nav">
+                <a href="#" class="logo">Sistema de <span>Almacenamiento</span></a>
+                <ul class="nav-links">
+                    <li><a href="#features">Características</a></li>
+                    <li><a href="#integration">Integración CI/CD</a></li>
+                    <li><a href="#docs">Documentación</a></li>
+                    <li><a href="#contact">Contacto</a></li>
+                </ul>
+                <a href="#download" class="btn-primary">Descargar Binario</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Almacenamiento Distribuido<br>en un Solo Binario Go</h1>
+            <p class="subtitle">SDK compilado estáticamente. Ejecuta tu nodo de almacenamiento en un click. Integración nativa con CI/CD. Sin dependencias externas.</p>
+            
+            <div class="hero-code">
+                <pre><code><span class="comment"># Descarga el binario (Linux x86_64)</span>
+<span class="keyword">curl</span> -L https://storage.example.com/v1.4.2/storage-linux-amd64 -o storage
+
+<span class="comment"># Dale permisos y ejecuta</span>
+<span class="keyword">chmod</span> +x storage
+<span class="keyword">./storage</span> --config=config.yaml
+
+<span class="comment"># Tu nodo está online en &lt; 3 segundos</span>
+<span class="binary">INFO[0001] Nodo activo en http://0.0.0.0:8080</span>
+<span class="binary">INFO[0001] Almacenamiento disponible: 2.1 TB</span></code></pre>
+            </div>
+            
+            <div class="cta-buttons">
+                <a href="#download" class="btn-primary">Descargar para Linux</a>
+                <a href="#docs" class="btn-secondary">Ver Todos los Binarios</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Diseñado para Empresas y DevOps</h2>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">🚀</span>
+                    <h3>1-Click Deploy</h3>
+                    <p>Binario único, compilado estáticamente. Sin Docker, sin runtime. Ejecuta en cualquier máquina con Linux, macOS o Windows.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">🔗</span>
+                    <h3>Integración CI/CD</h3>
+                    <p>Descarga el binario desde tu pipeline. Configura con variables de entorno. Ideal para GitHub Actions, GitLab CI, Jenkins.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">⚡</span>
+                    <h3>Sub-10ms Latencia</h3>
+                    <p>Red edge global. Tus datos se replican automáticamente en los nodos más cercanos al usuario final.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">🔒</span>
+                    <h3>Cifrado E2E</h3>
+                    <p>Cifrado en cliente con claves derivadas por proyecto. Ni nosotros podemos leer tus datos.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">♾️</span>
+                    <h3>Escalabilidad Horizontal</h3>
+                    <p>Añade nodos con un comando. El sistema balancea carga y datos automáticamente.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">📊</span>
+                    <h3>Métricas Nativas</h3>
+                    <p>Exporta métricas a Prometheus. Paneles preconfigurados en Grafana. Observabilidad total.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cicd" id="integration">
+        <div class="container">
+            <h2 class="section-title">Integración en tu Pipeline</h2>
+            <p style="color: #aaaaaa; max-width: 700px; margin: 0 auto 1rem;">Ejemplo de GitHub Actions</p>
+            
+            <div class="cicd-code">
+                <pre><code><span class="step">jobs:</span>
+  <span class="step">deploy-storage:</span>
+    <span class="step">runs-on:</span> ubuntu-latest
+    <span class="step">steps:</span>
+      - <span class="keyword">name:</span> Descargar binario
+        <span class="keyword">run:</span> |
+          curl -L https://storage.example.com/latest/storage-linux-amd64 \
+            -o storage-node
+          chmod +x storage-node
+      
+      - <span class="keyword">name:</span> Iniciar nodo
+        <span class="keyword">run:</span> |
+          ./storage-node --port=${{ secrets.STORAGE_PORT }} \
+                         --token=${{ secrets.STORAGE_TOKEN }}</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h3>1.2PB</h3>
+                    <p>Almacenados</p>
+                </div>
+                <div class="stat-item">
+                    <h3>98</h3>
+                    <p>Nodos Activos</p>
+                </div>
+                <div class="stat-item">
+                    <h3>8.2M</h3>
+                    <p>Archivos/Día</p>
+                </div>
+                <div class="stat-item">
+                    <h3>99.98%</h3>
+                    <p>Uptime</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="final-cta">
+        <div class="container">
+            <h2>Despliega tu Almacenamiento en Minutos</h2>
+            <p>Binario gratuito. Soporte enterprise. Escala bajo demanda.</p>
+            <a href="#download" class="btn-primary" style="font-size: 1.1rem; padding: 1rem 2.8rem;">Descargar Binario Go</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="#docs">Documentación</a>
+                <a href="#cli">CLI Reference</a>
+                <a href="#status">Estado del Sistema</a>
+                <a href="#security">Auditorías</a>
+                <a href="#contact">Soporte</a>
+            </div>
+            <p>© 2025 Sistema de Almacenamiento. Infraestructura del futuro, hoy.</p>
+        </div>
+    </footer>
+</body>
+</html>
