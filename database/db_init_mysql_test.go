@@ -51,11 +51,11 @@ func TestMySqlInitialization(t *testing.T) {
 
 func TestMySql_Env_Connection_String(t *testing.T) {
 
-	env := LoadDatabaseConfigFromEnv("./.mysql")
+	env := LoadDatabaseConfigFromEnv("./test/.mysql")
 	initializer := InitializeDatabaseDriver(env)
 	loader := initializer.Loader
 
-	err, dsn := loader.BuildDsnFromEnv("./.mysql")
+	err, dsn := loader.BuildDsnFromEnv("./test/.mysql")
 
 	if err != nil {
 		t.Error(err.Error())
