@@ -17,6 +17,7 @@ package database
 import (
 	"strings"
 
+	"github.com/joho/godotenv"
 	"gorm.io/gorm"
 )
 
@@ -29,7 +30,7 @@ const (
 	Oracle    DatabaseDriver = "oracle"
 	SqlServer DatabaseDriver = "sqlserver"
 	MariaDb   DatabaseDriver = "mariadb"
-	Sqlite3  DatabaseDriver = "sqlite3"
+	Sqlite3   DatabaseDriver = "sqlite"
 )
 
 // Will handle the connection to the database
@@ -37,53 +38,73 @@ const (
 type databaseInitializer struct {
 	Driver           DatabaseDriver
 	Loader           DatabaseLoader
-	ConnectionString string
+	DatabaseConfig              *DatabaseConfig
 }
 
-// TODO: Delete driverStr from the method signature.
-//		 This field will be read from .env file
-func InitializeDatabaseDriver(driverStr, connectionString string) databaseInitializer {
-	driverStr = strings.ToLower(driverStr)
+
+func (d *databaseInitializer) load() (*gorm.DB,error){
+	cnf := d.DatabaseConfig
+	return d.Loader.LoadDatabase(cnf)
+}
+
+// Depending on the database config, usually read from a .env file,
+// the correct DatabaseLoader will be allocated.
+func InitializeDatabaseDriver(databaseConfig *DatabaseConfig) databaseInitializer {
+	driverStr := strings.ToLower(databaseConfig.DatabaseType)
 	var systemDriver DatabaseDriver
 	var loader DatabaseLoader = NotImplementedLoader{}
 	switch driverStr {
 	case "mysql":
 		systemDriver = MySql
 		loader = MySqlLoader{}
+		
 	case "mariadb":
 		systemDriver = MariaDb
 		loader = MySqlLoader{}
-
+		
 	case "oracle":
 		systemDriver = Oracle
-
+		
 	case "postgres":
 		systemDriver = Postgres
 		loader = PostgresLoader{}
-
+		
 	case "sqlserver":
 		systemDriver = SqlServer
-	case "sqlite3":
+	case "sqlite": 
 		systemDriver = Sqlite3
 		loader = SqliteLoader{}
+		
 	}
-	
-	
+
 	return databaseInitializer{
 		Driver:           systemDriver,
-		ConnectionString: connectionString,
 		Loader:           loader,
+		DatabaseConfig:              databaseConfig,
 	}
 }
 
 // This method from databaseInitializer will gracefully handle the driver
-// that will connect the app to the database.
+// that will connect the app to the database. 
+// It needs a DatabaseConfig object to work
 func (initializer *databaseInitializer) InitDatabase() *gorm.DB {
 	var db *gorm.DB
-
-	db, err := initializer.Loader.LoadDatabase(initializer.ConnectionString)
+	db, err := initializer.load()
 	if err != nil {
 		panic(err)
 	}
 	return db
+}
+
+// Entrypoint for creating a Database connection
+// It uses the required .env file located in the root directory.
+// 
+// The magic of loading different kind of databases resides in the
+// InitializeDatabaseDriver() method, which loads the correct driver
+//
+func GetDatabase() *gorm.DB {
+	godotenv.Load(".env")
+	env := LoadDatabaseConfigFromEnv(".env")
+	initializer := InitializeDatabaseDriver(env)
+	return initializer.InitDatabase()
 }

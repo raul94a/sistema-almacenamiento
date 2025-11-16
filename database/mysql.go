@@ -15,12 +15,61 @@
 package database
 
 import (
+	"fmt"
+	"regexp"
+
+	"github.com/storage-system/database/patterns"
 	"gorm.io/driver/mysql"
-  	"gorm.io/gorm"
+	"gorm.io/gorm"
 )
 
-type MySqlLoader struct{}
+type MySqlLoader struct {
+}
 
-func (m MySqlLoader) LoadDatabase(connectionString string) (*gorm.DB, error) {
-  	return gorm.Open(mysql.Open(connectionString), &gorm.Config{})
+func (m MySqlLoader) LoadDatabase(databaseConfig *DatabaseConfig) (*gorm.DB, error) {
+	err, connectionString := m.BuildDsn(databaseConfig)
+	if err != nil {
+		panic(err)
+	}
+	return gorm.Open(mysql.Open(connectionString), &gorm.Config{})
+}
+
+func (m MySqlLoader) buildDsnFromEnvStruct(env *DatabaseConfig) string {
+	return env.DatabaseUser + ":" + env.DatabasePassword + "@" + "tcp(" + env.DatabaseUrl + ":" + env.DatabasePort + ")" + "/" + env.DatabaseName
+
+}
+
+func (m MySqlLoader) BuildDsn(env *DatabaseConfig) (error, string) {
+
+	mysqlPattern := patterns.CreateDSNPatterns().MySQL
+
+	dsn := m.buildDsnFromEnvStruct(env)
+	re := regexp.MustCompile(mysqlPattern)
+
+	if re.MatchString(dsn) {
+		return nil, dsn
+
+	}
+	return fmt.Errorf("bad connection string %s", dsn), ""
+
+}
+
+// Testing
+func (m MySqlLoader) BuildDsnFromEnv(path string) (error, string) {
+	fmt.Printf("MysqlLoader BuildDsnFromEnv %s\n", path)
+	env := LoadDatabaseConfigFromEnv(path)
+	if len(env.DatabaseUrl) == 0 || len(env.DatabaseUrl) == 0 {
+		panic(fmt.Errorf("Env file not loaded"))
+	}
+	dsn := m.buildDsnFromEnvStruct(env)
+	mysqlPattern := patterns.CreateDSNPatterns().MySQL
+
+	re := regexp.MustCompile(mysqlPattern)
+
+	if re.MatchString(dsn) {
+		return nil, dsn
+	}
+
+	return fmt.Errorf("bad connection string %s", dsn), ""
+
 }

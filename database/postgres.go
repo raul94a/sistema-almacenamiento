@@ -16,13 +16,26 @@ package database
 
 import (
 	"gorm.io/driver/postgres" // Sqlite driver based on CGO
-  "gorm.io/gorm"
+	"gorm.io/gorm"
 )
 
 type PostgresLoader struct{}
 
-func (m PostgresLoader) LoadDatabase(connectionString string) (*gorm.DB, error) {
+func (m PostgresLoader) LoadDatabase(databaseConfig *DatabaseConfig) (*gorm.DB, error) {
 	// dsn := "host=localhost user=gorm password=gorm dbname=gorm port=9920 sslmode=disable TimeZone=Asia/Shanghai"
-	return  gorm.Open(postgres.Open(connectionString), &gorm.Config{})
+	err, connectionString := m.BuildDsn(databaseConfig)
+	if err != nil {
+		panic(err)
+	}
+	return gorm.Open(postgres.Open(connectionString), &gorm.Config{})
+
+}
+func (m PostgresLoader) BuildDsn(env *DatabaseConfig) (error, string) {
+	return nil, ""
+
+}
+
+func (m PostgresLoader) BuildDsnFromEnv(path string) (error, string) {
+	return nil, ""
 
 }

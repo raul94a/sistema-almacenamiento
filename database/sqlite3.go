@@ -15,17 +15,34 @@
 package database
 
 import (
- "gorm.io/driver/sqlite" // Sqlite driver based on CGO
-  // "github.com/glebarez/sqlite" // Pure go SQLite driver, checkout https://github.com/glebarez/sqlite for details
-  "gorm.io/gorm"
+	"fmt"
 
+	"gorm.io/driver/sqlite" // Sqlite driver based on CGO
+	// "github.com/glebarez/sqlite" // Pure go SQLite driver, checkout https://github.com/glebarez/sqlite for details
+	"gorm.io/gorm"
 )
 
 type SqliteLoader struct{}
 
-func (m SqliteLoader) LoadDatabase(connectionString string) (*gorm.DB, error) {
+func (m SqliteLoader) LoadDatabase(databaseConfig *DatabaseConfig) (*gorm.DB, error) {
 	// EXAMPLE file:test.db?cache=shared&mode=memory
+	err, connectionString := m.BuildDsn(databaseConfig)
+	if err != nil {
+		panic(err)
+	}
+	return gorm.Open(sqlite.Open(connectionString), &gorm.Config{})
 
-	return  gorm.Open(sqlite.Open(connectionString), &gorm.Config{})
+}
+// For creating a SQLite Database, we're only using  its DATABASE_NAME
+// from .env file
+func (m SqliteLoader) BuildDsn(env *DatabaseConfig) (error, string) {
+	name := env.DatabaseName
+	if len(name) == 0 {
+		return fmt.Errorf("database name cannot be empty"), ""
+	}
+	return nil, name
+}
 
+func (m SqliteLoader) BuildDsnFromEnv(path string) (error, string) {
+	return nil, ""
 }

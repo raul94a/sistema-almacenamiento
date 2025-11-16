@@ -1,0 +1,66 @@
+Proposal algorithm for string connection for different DBMS under construction
+
+# MySQL / MariaDB
+
+## Template
+
+user:pass@tcp(127.0.0.1:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local
+username:password@protocol(address)/dbname?param=value
+
+## algorithm
+
+.*[:].*[@][tcp|udp]/.*
+
+## Query parameters
+
+|   Key| Value  |   |   |   |
+|---|---|---|---|---|
+|  charsets | any allowed value in MySQL spec  |   |   |   |
+|  parseTime |  True/False |   |   |   |
+|   loc | string  |   |   |   |
+
+[For More info -And parameters-](http://github.com/go-sql-driver/mysql#parameters)
+
+
+allowAllFiles
+allowCleartextPasswords
+allowFallbackToPlaintext
+allowNativePasswords
+allowOldPasswords
+charset
+checkConnLiveness
+collation
+clientFoundRows
+columnsWithAlias
+compress
+interpolateParams
+# SQLite
+
+## Template
+
+file:DB_NAME
+
+Example
+```db
+file:database.db
+```
+## Query parameters
+
+|   Key| Value  |   |   |   |
+|---|---|---|---|---|
+|  cache | shared  |   |   |   |
+|  mode |  memory |   |   |   |
+|   |   |   |   |   |
+```database
+file:test.db?cache=shared&mode=memory
+```
+
+## Algorithm 
+
+We're gonna provide an easy way of configuring the SQLite database. Just providing the file in the env path will enable this feature
+```env
+DATABASE_URL=database.db
+```
+
+
+
