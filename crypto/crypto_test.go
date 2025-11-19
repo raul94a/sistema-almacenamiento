@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"testing"
 	"time"
+
+	crypto_utils "github.com/storage-system/crypto/utils"
 )
 
 
@@ -29,4 +31,43 @@ func Test_Crypto_Hybrid_Envelope(t *testing.T){
 	t.Logf("Secreto descifrado %s", plainText)
 
 
+}
+
+
+func Test_Aes_Base_64_CipherText(t * testing.T){
+	k, _ := generateAesKey(AES_32_BYTES_KEY)
+	t.Logf("Key: %s",string(k))
+	payload := "TEST_AES_BASE_64_SPAIN_CIPHER"
+	aesGcmCiphertextPacket, _ := aesGcmEncryption(k,payload)
+
+	t.Logf("Ciphertext: %s",string(aesGcmCiphertextPacket.Data))
+
+	decrypted, _ := aesGcmDecryption(k,aesGcmCiphertextPacket)
+
+	t.Logf("Decripted string: %s",decrypted)
+
+	if payload != decrypted {
+		t.Fatal("Ciphertext has not been decrypted correctly")
+	}
+
+
+
+}
+
+func Test_Aes_Encryption_Decryption_Load(t *testing.T){
+	
+	data := crypto_utils.CryptoUtilsTestData()
+	for _, line :=range data{
+		k, _ := generateAesKey(AES_32_BYTES_KEY)
+		aesGcmCiphertextPacket, _ := aesGcmEncryption(k,line)
+		decrypted, _ := aesGcmDecryption(k,aesGcmCiphertextPacket)
+		if line != decrypted {
+			t.Logf("String to cipher: %s",line)
+			t.Logf("Decrypted string: %s",decrypted)
+			t.Fatalf("Ciphertext has not been decrypted correctly")
+			
+		}
+
+
+	}
 }
