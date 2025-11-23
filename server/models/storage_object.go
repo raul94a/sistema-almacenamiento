@@ -37,10 +37,10 @@ type StorageObject struct {
 					// will be necesary to explore the Idea of AppId as a
 					// way of communicating with a bucket.
 	Description string 
-	Disk string // the disk to be stored
+	Disk string     // the disk to be stored
 	Encrypted bool
 	EncryptionMethod *string // Reponsability of the client. The idea is to have 
-							 // a E2EE system.
+							// a E2EE system.
 	Location string  // where the file will be stored inside the filesystem
 	Region *string  // for distributed systems we need to know the region. ej: aws-west-2
 	Parent *string // A parent is a directory where the file is stored
