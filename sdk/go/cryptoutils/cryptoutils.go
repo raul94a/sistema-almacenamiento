@@ -64,8 +64,8 @@ func (c *CryptoUtils) EncryptPayload(key []byte, payload string) (*aes_packet.Ae
 
 // RsaEncryptAesKey encrypts the symmetric AES key using the storage server's
 // RSA Public Key (creating the "Auth" header value).
-func (c *CryptoUtils) RsaEncryptAesKey(pubKey *rsa.PublicKey, packet *aes_packet.AesPacket) ([]byte, error) {
-	encryptedKey, err := rsa.EncryptOAEP(sha256.New(), rand.Reader, pubKey, packet.Data, nil)
+func (c *CryptoUtils) RsaEncryptAesKey(pubKey *rsa.PublicKey, aesKey []byte) ([]byte, error) {
+	encryptedKey, err := rsa.EncryptOAEP(sha256.New(), rand.Reader, pubKey, aesKey, nil)
 	if err != nil {
 		return nil, err
 	}

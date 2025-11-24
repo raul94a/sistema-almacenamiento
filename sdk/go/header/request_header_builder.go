@@ -1,4 +1,4 @@
-package request_header
+package header
 
 import (
 	"fmt"
