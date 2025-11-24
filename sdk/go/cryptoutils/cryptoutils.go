@@ -90,13 +90,8 @@ func (c *CryptoUtils) HashNonce(nonce []byte) (string) {
 // for transmission as string headers (X-Digital-Envelope and X-Nonce).
 type HexEncodeNonce string
 type HexEncodeCiphertext string
-func (c *CryptoUtils) HexEncodeAesPacket(p *aes_packet.AesPacket) (hexCiphertext HexEncodeCiphertext, hexNonce HexEncodeNonce) {
-    // Implementation would use hex.EncodeToString.
-    data := p.Data
-	nonce := p.Nonce
-	hexEncData := hex.EncodeToString(data)
-	hexEncNonce := hex.EncodeToString(nonce)
-	return HexEncodeCiphertext(hexEncData), HexEncodeNonce(hexEncNonce)
+func (c *CryptoUtils) HexEncodeAesPacket(p *aes_packet.AesPacket) *aes_packet.HexEncodedAesPacket {
+	return p.EncodeToHex()
 }
 
 type aesKey []byte
