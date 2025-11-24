@@ -38,7 +38,6 @@ func main(){
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("UU
-	ID %s",uid)
+	fmt.Printf("UUID %s",uid)
 
 }
