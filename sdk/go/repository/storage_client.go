@@ -39,6 +39,17 @@ func NewRepository(baseURL string) *StorageRepository {
 	}
 }
 
+func NewRepositoryWithPublicKey(baseUrl string, pk *rsa.PublicKey) *StorageRepository{
+	return &StorageRepository{
+		BaseURL: baseUrl,
+		PublicKey: pk,
+		HTTPClient: &http.Client{
+			Timeout: time.Second * 30, // Buen hábito en SDKs
+		},
+		cryptoutils: cryptoutils.CryptoUtils{},
+	}
+}
+
 func (c *StorageRepository) addHeaders(jwt *string, req *http.Request)(*http.Request, error){
 	builder := header.RequestHeaderBuilder{}
 	aesKey, err := c.cryptoutils.CreateAesKey()
@@ -53,18 +64,18 @@ func (c *StorageRepository) addHeaders(jwt *string, req *http.Request)(*http.Req
 	if err != nil {
 		return nil,err
 	}
-	//rsaEncryptedAes, err := c.cryptoutils.RsaEncryptAesKey(c.PublicKey,aesKey)
+	rsaEncryptedAes, err := c.cryptoutils.RsaEncryptAesKey(c.PublicKey,aesKey)
 	if err != nil {
 		return nil,err
 	}
-	//hexEncryptedAes := c.cryptoutils.HexEncodeEncryptedAesKey(rsaEncryptedAes)
+	hexEncryptedAes := c.cryptoutils.HexEncodeEncryptedAesKey(rsaEncryptedAes)
 	hexEncodedAesPacket := c.cryptoutils.HexEncodeAesPacket(packet)
 	hashNonce := c.cryptoutils.HashNonce(packet.Data)
 	builder = *builder.Builder(req).
 	AddSite().
 	AddDigitalEnvelope(hexEncodedAesPacket.Data).
 	AddNonce(hexEncodedAesPacket.Nonce).
-	//AddAuth(hexEncryptedAes).
+	AddAuth(hexEncryptedAes).
 	AddHashHeader(hashNonce)
 
 	if jwt != nil {

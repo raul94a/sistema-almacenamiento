@@ -5,13 +5,21 @@ import (
 	"os"
 	"time"
 
+	"storage.client.com/client"
 	"storage.client.com/repository"
 	"storage.client.com/repository/models"
 )
 
 
 func main(){
-
+	var secret string
+	secret = "hola"
+	client, err := client.NewClient("HOLA", &secret)
+	if client == nil {
+		fmt.Sprintf("CLIENT IS NOT INITIALIZED")
+		os.Exit(0)
+	}
+	
 	r := repository.NewRepository("http://localhost:4444")
 	
 	file := "bak.ipa"
