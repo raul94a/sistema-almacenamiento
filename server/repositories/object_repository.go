@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"log"
 	"github.com/storage-system/server/models"
 	"gorm.io/gorm"
@@ -12,12 +13,14 @@ import (
 *
 *
 *
-*/
+ */
 
 
 type ObjectRepository struct {
 	Db *gorm.DB
+	ctx context.Context
 }
+
 
 func (r *ObjectRepository) UploadFile(object *models.Object) (error){
 
@@ -27,4 +30,13 @@ func (r *ObjectRepository) UploadFile(object *models.Object) (error){
 		return  tx.Error
 	}
 	return  nil
+}
+
+// Soft delete, gorm automatically handles the deleted_at file
+func (r *ObjectRepository) DeleteFile(object *models.Object) (error){
+	object.Deleted = true
+	if tx := r.Db.Delete(object); tx.Error != nil {
+		return tx.Error
+	}
+	return nil;
 }

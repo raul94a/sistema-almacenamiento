@@ -19,7 +19,7 @@ type UploadObjectService struct {
 }
 
 //TODO: Idempotency should be present in HTTP handler
-func (u UploadObjectService) Upload(
+func (u *UploadObjectService) Upload(
 	uploadObject models.UploadObject, 
 	data []byte, 
 	jwt *string,) (string, error){
