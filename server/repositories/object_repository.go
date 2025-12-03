@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"os"
@@ -17,7 +16,6 @@ import (
 
 type ObjectRepository struct {
 	Db *gorm.DB
-	ctx context.Context
 }
 
 func (r *ObjectRepository) GetUserFiles(userId any, page, maxItemsPerPage int)(*models.Pagination[models.Object], error) {
