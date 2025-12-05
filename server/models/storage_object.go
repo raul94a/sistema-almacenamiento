@@ -38,7 +38,7 @@ type Object struct {
     DeletedAt gorm.DeletedAt `json:"deleted_at,omitempty" gorm:"column:deleted_at;index"` // Proper soft delete
 
     // Foreign key
-    UserOwner string `json:"user_owner" gorm:"column:user_owner;index"`
+    UserOwner *string `json:"user_owner" gorm:"column:user_owner;index"`
     // If you have a User model:
     // UserOwner   string `json:"-" gorm:"column:user_owner;size:36;not null;index"`
     // User        User   `json:"user,omitempty" gorm:"foreignKey:UserOwner;references:ID"`

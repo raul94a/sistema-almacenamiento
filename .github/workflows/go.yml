@@ -28,3 +28,5 @@ jobs:
       run: go test -v ./database
     - name: Test Database/patterns
       run: go test -v ./database/patterns
+    - name: Test Server/Repositories
+      run: go test ./server/repositories
