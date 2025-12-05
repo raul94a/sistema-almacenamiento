@@ -93,7 +93,8 @@ func (u *UploadObjectService) Upload(
 	// save the file into the fs
 	err = os.WriteFile(fmt.Sprintf("%s%s/%s",object.Disk,object.Location,object.Filename),data,os.ModeAppend)
 	if err != nil {
-		log.Println("Error. UploadFile on WriteFile %s",err.Error())
+		// TODO: Remove
+		log.Printf("Error. UploadFile on WriteFile %s",err.Error())
 		return "", err
 	}
 	err = u.Repository.UploadFile(&object)
