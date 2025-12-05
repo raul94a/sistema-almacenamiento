@@ -1,7 +1,9 @@
 package service
 
 import (
+	"fmt"
 	"log"
+	"os"
 
 	"github.com/google/uuid"
 	"github.com/storage-system/server/models"
@@ -81,12 +83,19 @@ func (u *UploadObjectService) Upload(
 	object.Disk = ""
 	// TODO: Location - Should we use uuid + filename?
 	// TODO: Location - What should we do if there's a clash of uuid + filename (highly unlikely)
-	object.Location = ""
+	// How to handle the location for EACH disk?
+	// TODO: Remove the hardcoded location
+	object.Location = "~/Desktop"
 	
 	// Deleted to false
 	object.Deleted = false
 
-
+	// save the file into the fs
+	err = os.WriteFile(fmt.Sprintf("%s%s/%s",object.Disk,object.Location,object.Filename),data,os.ModeAppend)
+	if err != nil {
+		log.Println("Error. UploadFile on WriteFile %s",err.Error())
+		return "", err
+	}
 	err = u.Repository.UploadFile(&object)
 
 	if err != nil {
