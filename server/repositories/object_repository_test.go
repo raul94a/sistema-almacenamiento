@@ -64,9 +64,6 @@ func createRepository(t *testing.T)*ObjectRepository{
 
 func TestUploadFile(t *testing.T){
 	repository := createRepository(t)
-
-	
-
 	object := &models.Object{
 		Disk: "C",
 		Location: "pwd/Desktop",
@@ -83,7 +80,6 @@ func TestUploadFile(t *testing.T){
 	t.Log("SCHEMA se ha ejecutado. Accediendo")
 	var count int64
 	repository.Db.Model(&models.Object{}).Count(&count)
-	//repository.Db.Exec("SELECT COUNT(*) FROM objects",&count)
 	t.Logf("NUMERO DE OBJETOS ENCONTRADOS %v",count)
 	const NUMBER_OBJECTS_MUST_BE_FOUND = 1
 	if count != NUMBER_OBJECTS_MUST_BE_FOUND {
@@ -92,5 +88,4 @@ func TestUploadFile(t *testing.T){
 
 	os.Remove("../test.db")
 
-	
 }
