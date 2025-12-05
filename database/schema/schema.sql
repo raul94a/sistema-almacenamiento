@@ -26,15 +26,14 @@ CREATE TABLE IF NOT EXISTS objects (
     unit VARCHAR(10),
 
     -- Timestamps
-    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-    updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-    deleted_at TIMESTAMP WITHOUT TIME ZONE NULL,
+    created_at DATETIME NOT NULL,
+    updated_at DATETIME NOT NULL,
+    deleted_at DATETIME NULL,
 
     -- Foreign Key/Owner
-    user_owner VARCHAR(36) NULL, -- NULLable since it's *string in Go
+    user_owner VARCHAR(36) NULL
 
     -- Unique Constraint for Hash (Enforcing uniqueness only for active/undeleted files)
-    CONSTRAINT idx_hash_deleted UNIQUE (hash, deleted)
 );
 
 -- Separate Index Definitions (For better readability)
