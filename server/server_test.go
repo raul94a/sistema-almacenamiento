@@ -2,17 +2,19 @@ package server
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"mime/multipart"
 	"net/http"
 	"os"
+	"path/filepath"
+	"runtime"
 	"testing"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/storage-system/database"
-
 	"github.com/storage-system/server/controller"
 	"github.com/storage-system/server/models"
 	repository "github.com/storage-system/server/repositories"
@@ -48,9 +50,12 @@ func Test_Landing_Page(t *testing.T) {
 
 func TestUploadFILE(t *testing.T) {
 	port := "8888"
-	go initHttpServer(port)
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel() 
+	go initHttpServer(port,ctx)
 	time.Sleep(1 * time.Second)
-	f, _ := os.Create("DATA.txt")
+	newFilename := "DATA.txt"
+	f, _ := os.Create(newFilename)
 	content := "TEST FILE"
 	contentBytes := []byte(content)
 	f.Write(contentBytes)
@@ -60,7 +65,20 @@ func TestUploadFILE(t *testing.T) {
 	httpClient := &http.Client{
 		Timeout: time.Second * 30,
 	}
-	const UPLOAD_FILEPATH = "Users/Raul9/Documents/Desarrollo/Go/sistema-almacenamiento/files/DATA.txt"
+	
+	currentFilepath,_ := os.Getwd()
+	currentFilePathWithoutVolume := currentFilepath
+	volume := ""
+	if runtime.GOOS == "windows"{
+		volume = filepath.VolumeName(currentFilePathWithoutVolume)	
+		t.Log(volume)
+		size := len(volume)
+		currentFilePathWithoutVolume = currentFilePathWithoutVolume[size + 1:]
+	}
+	t.Log(currentFilePathWithoutVolume)
+
+	const UPLOAD_FILENAME = "DATA_COPY.txt"
+	UPLOAD_FILEPATH := filepath.Join(currentFilePathWithoutVolume,UPLOAD_FILENAME)
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
 	creator := &models.UploadObject{
@@ -114,13 +132,35 @@ func TestUploadFILE(t *testing.T) {
 		t.Fatal(err.Error())
 	}
 
-	os.Remove("C:/Users/Raul9/Documents/Desarrollo/Go/sistema-almacenamiento/server/DATA.txt")
-	os.Remove(fmt.Sprintf("C:/%s",UPLOAD_FILEPATH))
+	t.Cleanup(func() {
+		os.Remove(filepath.Join(currentFilepath,newFilename))
+		os.Remove(filepath.Join(volume,string(filepath.Separator),UPLOAD_FILEPATH))
+		time.Sleep(1 *time.Second)
+
+		if err := os.Remove(filepath.Join(currentFilepath,"test.db")); err != nil {
+			t.Log(err.Error())
+		}
+	})
+
 }
 
-func initHttpServer(port string) {
+
+func initHttpServer(port string,ctx context.Context) {
 	serverHandler := createTestServer()
-	serverHandler.HttpServer(&port)
+	
+	// Start server in a separate goroutine
+    go func() {
+        serverHandler.HttpServer(&port)
+    }()
+
+    // Wait for the context to be cancelled
+    <-ctx.Done()
+    
+    // Shut down gracefully (this releases the port and file handles)
+    _, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	db , _ := serverHandler.ObjectController.UploadService.Repository.Db.DB()
+	defer db.Close()
+    defer cancel()
 }
 
 func createTestServer() *HttpServerHandler {
@@ -134,13 +174,17 @@ func createTestServer() *HttpServerHandler {
 			},
 		},
 	}
+	
 	return &serverHandler
 }
 
 func createSQLiteTestDb() *gorm.DB {
 
 	dbPath := "test.db"
-	os.Remove(dbPath)
+	if err := os.Remove(dbPath); err != nil {
+		fmt.Println(err.Error())
+
+	}
 
 	env := &database.DatabaseConfig{
 		DatabaseType: "sqlite",
@@ -155,6 +199,8 @@ func createSQLiteTestDb() *gorm.DB {
 	if tx := db.Exec(string(bytes)); tx.Error != nil {
 
 	}
+	
 	return db
 
 }
+

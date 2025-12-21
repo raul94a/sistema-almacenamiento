@@ -49,4 +49,5 @@ func (h *HttpServerHandler) HttpServer(port *string) {
 	power.Handler("/api/v1/PutObject", h.ObjectController.UploadObject)
 	fmt.Printf("Port is: %s",*port)
 	http.ListenAndServe(fmt.Sprintf(":%v",*port), nil)
+	
 }
