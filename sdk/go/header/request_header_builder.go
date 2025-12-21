@@ -79,6 +79,17 @@ func (r *RequestHeaderBuilder) AddHashHeader(hash string) *RequestHeaderBuilder 
 	return r
 }
 
+// Nonce SHA-3 256 Bytes length hash
+func (r *RequestHeaderBuilder) AddMultipartFormDataHeader() *RequestHeaderBuilder {
+	if r.Request == nil {
+		panic(fmt.Errorf("RequestHeaderBuilder error: Call .Builder(req) before attempting to add headers"))
+	}
+	const CONTENT_TYPE = "Content-Type"
+	const MULTIPART = "multipart/form-data"
+	r.Request.Header.Add(CONTENT_TYPE,MULTIPART)
+	return r
+}
+
 func (r *RequestHeaderBuilder) Build() *http.Request{
 	if r.Request == nil {
 		panic(fmt.Errorf("RequestHeaderBuilder error: Call .Builder(req) before attempting to add headers"))

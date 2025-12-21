@@ -31,3 +31,17 @@ type Object struct {
 
 	UserOwner        string     `json:"user_owner"`
 }
+
+type UploadObject struct {
+	Description 	  string  `json:"description"`
+	Bucket 			  *string `json:"bucket,omitempty"`
+	Parent            *string `json:"parent,omitempty"`
+    EncryptionMethod  *string `json:"encryption_method,omitempty"`
+	Public    		  bool    `json:"public"`
+    Filename  		  string  `json:"filename"`
+    Extension 	      string  `json:"extension"`
+    Hash      	      string  `json:"hash"` 
+    Size      		  int64   `json:"size"`
+    Unit      		  string  `json:"unit"`
+	UserOwner         *string `json:"user_owner"`
+}

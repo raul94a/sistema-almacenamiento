@@ -1,9 +1,11 @@
 package service
 
 import (
-	"fmt"
+	"io"
 	"log"
+	"mime/multipart"
 	"os"
+	"path/filepath"
 
 	"github.com/google/uuid"
 	"github.com/storage-system/server/models"
@@ -12,7 +14,7 @@ import (
 
 
 type UploadService interface {
-	Upload(uploadObject models.UploadObject, data []byte, jwt *string) (string, error)
+	Upload(uploadObject models.UploadObject, file multipart.File, jwt *string) (string, error)
 }
 
 
@@ -23,7 +25,7 @@ type UploadObjectService struct {
 //TODO: Idempotency should be present in HTTP handler
 func (u *UploadObjectService) Upload(
 	uploadObject models.UploadObject, 
-	data []byte, 
+	file multipart.File, 
 	jwt *string,) (string, error){
 	
 	// Should create and ID for this file
@@ -80,29 +82,42 @@ func (u *UploadObjectService) Upload(
 		tenantToDisks sync.Map // tenantID -> []string
 	}*/
 
-	object.Disk = ""
+	object.Disk = "C:/"
 	// TODO: Location - Should we use uuid + filename?
 	// TODO: Location - What should we do if there's a clash of uuid + filename (highly unlikely)
 	// How to handle the location for EACH disk?
-	// TODO: Remove the hardcoded location
-	object.Location = "~/Desktop"
+
+	
+	object.Location = os.Getenv("FOLDER_LOCATION")
 	
 	// Deleted to false
 	object.Deleted = false
-
+	savepath := filepath.Join(object.Disk,object.Location,object.Filename)
 	// save the file into the fs
-	err = os.WriteFile(fmt.Sprintf("%s%s/%s",object.Disk,object.Location,object.Filename),data,os.ModeAppend)
+	out, err := os.Create(savepath)
 	if err != nil {
 		// TODO: Remove
 		log.Printf("Error. UploadFile on WriteFile %s",err.Error())
 		return "", err
+	} else {
+		log.Print("El archivo ha sido guardado con éxito\n")
 	}
-	err = u.Repository.UploadFile(&object)
+	defer out.Close()
 
-	if err != nil {
-		return "", err
-	}
-	
-	return id,nil
+	written, err := io.Copy(out, file)
+    if err != nil {
+        log.Printf("Error copying data: %v", err)
+        return "", err
+    }
+
+    log.Printf("Successfully saved %d bytes to %s", written, savepath)
+
+    // 3. Save metadata to repository
+    err = u.Repository.UploadFile(&object)
+    if err != nil {
+        return "", err
+    }
+    
+    return id, nil
 
 }
