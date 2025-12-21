@@ -110,3 +110,5 @@ require (
 	gorm.io/driver/sqlserver v1.6.1 // indirect
 	gorm.io/gorm v1.31.0 // indirect
 )
+
+replace github.com/storage-system/sdk/go => ./sdk/go

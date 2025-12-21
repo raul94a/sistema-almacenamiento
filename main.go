@@ -16,32 +16,33 @@ import (
 	"gorm.io/gorm"
 )
 
-func main()  {
+func main() {
 	fmt.Println("🇪🇸 🇪🇸 🇪🇸 🇪🇸  Hello World! 🇪🇸 🇪🇸 🇪🇸 🇪🇸")
 	db := database.GetDatabase()
 	// testing
 	createObjectsTable(db)
-	server.HttpServer(CreateUploadObjectController(db))
+	serverHandler := server.HttpServerHandler{
+		ObjectController: CreateUploadObjectController(db),
+	}
+	serverHandler.HttpServer(nil)
 }
 
-func CreateUploadObjectController(db *gorm.DB) controller.UploadObjectController {
-	
-	uoc := controller.UploadObjectController {
+func CreateUploadObjectController(db *gorm.DB) *controller.ObjectController {
+
+	uoc := controller.ObjectController{
 		UploadService: &service.UploadObjectService{
 			Repository: &repository.ObjectRepository{Db: db},
 		},
 	}
-	return uoc;
+	return &uoc
 }
 
-//TODO: Solo develop
+// TODO: Solo develop
 func createObjectsTable(db *gorm.DB) {
 	bytes, _ := os.ReadFile("database/schema/schema.sql")
-	
+
 	if tx := db.Exec(string(bytes)); tx.Error != nil {
-		
+
 	}
-	
-	
 
 }

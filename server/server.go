@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 
@@ -10,22 +11,28 @@ import (
 
 var indexHtmlCache []byte
 
-func HttpServer(uoc controller.UploadObjectController){
+type HttpServerHandler struct {
+	ObjectController *controller.ObjectController
+}
 
+func (h *HttpServerHandler) HttpServer(port *string) {
+	defaultPort := "4444"
+	if port == nil {
+		port = &defaultPort;
+	}
 	publicDir := "./server/public"
 
 	fs := http.FileServer(http.Dir(publicDir))
 
-    http.Handle("/public/",http.StripPrefix("/public/",fs))
+	http.Handle("/public/", http.StripPrefix("/public/", fs))
 
-
-	power.Handler("/index.html",func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Add("content-type","text/html")
+	power.Handler("/index.html", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("content-type", "text/html")
 		if indexHtmlCache != nil {
 
-			 w.Write(indexHtmlCache)
-			
-			 return
+			w.Write(indexHtmlCache)
+
+			return
 		}
 		bytes, err := os.ReadFile("./server/public/index.html")
 		if err != nil {
@@ -39,9 +46,7 @@ func HttpServer(uoc controller.UploadObjectController){
 
 	})
 
-
-	power.Handler("/api/v1/PutObject", uoc.UploadObject)
-
-
-	http.ListenAndServe(":4444",nil)
+	power.Handler("/api/v1/PutObject", h.ObjectController.UploadObject)
+	fmt.Printf("Port is: %s",*port)
+	http.ListenAndServe(fmt.Sprintf(":%v",*port), nil)
 }
