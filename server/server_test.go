@@ -4,12 +4,21 @@ import (
 	"net/http"
 	"testing"
 	"time"
+
+	"github.com/storage-system/server/controller"
+	repository "github.com/storage-system/server/repositories"
+	"github.com/storage-system/server/service"
 )
 
 
 func Test_Landing_Page(t *testing.T){
 	t.Skip()
-	go HttpServer()	
+	uoc := controller.UploadObjectController {
+		UploadService: &service.UploadObjectService{
+			Repository: &repository.ObjectRepository{},
+		},
+	}
+	go HttpServer(uoc)	
 	time.Sleep(5 *time.Second)
 	if r,e := http.Get("http://localhost:4444/index.html"); e != nil {
 		t.Fatal(e.Error())

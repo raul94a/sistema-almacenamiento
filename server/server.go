@@ -3,11 +3,14 @@ package server
 import (
 	"net/http"
 	"os"
+
+	"github.com/storage-system/server/controller"
+	"github.com/storage-system/server/power"
 )
 
-var indexHtmlCache []byte		
+var indexHtmlCache []byte
 
-func HttpServer(){
+func HttpServer(uoc controller.UploadObjectController){
 
 	publicDir := "./server/public"
 
@@ -15,7 +18,8 @@ func HttpServer(){
 
     http.Handle("/public/",http.StripPrefix("/public/",fs))
 
-	http.HandleFunc("/index.html", func(w http.ResponseWriter, r *http.Request) {
+
+	power.Handler("/index.html",func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("content-type","text/html")
 		if indexHtmlCache != nil {
 
@@ -34,6 +38,10 @@ func HttpServer(){
 		fs.ServeHTTP(w, r)
 
 	})
+
+
+	power.Handler("/api/v1/PutObject", uoc.UploadObject)
+
 
 	http.ListenAndServe(":4444",nil)
 }

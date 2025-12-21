@@ -1,10 +1,12 @@
 # sistema-almacenamiento
 Sistema de almacenamiento. Gestor de archivos.
 
-## Aprendizaje de Go
+# Configuración Windows - SQLite
 
-[Click para ir a gobyexample](https://gobyexample.com/)
+For Windows OS is required to install MSYS2 and mingw-w64.
 
+* [MSYS2](https://www.msys2.org/)
+* [mingw-w64] (https://packages.msys2.org/packages/mingw-w64-x86_64-gcc)
 
 ## Bibliotecas
 

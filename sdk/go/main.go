@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"time"
 
 	"storage.client.com/client"
 	"storage.client.com/repository"
@@ -12,6 +11,7 @@ import (
 
 
 func main(){
+	fmt.Println("INIT")
 	var secret string
 	secret = "hola"
 	client, err := client.NewClient("HOLA", &secret)
@@ -22,21 +22,24 @@ func main(){
 	
 	r := repository.NewRepository("http://localhost:4444")
 	
-	file := "bak.ipa"
+	file := "DATA.txt"
 
-	m := &models.Object{
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
-		Public: true,
-		Deleted: false,
-		Filename: "go.sum",
-		Extension: ".sum",
-		Disk: "C",
-		Location: "ya lo averiguare",
-		Hash: "No se",
+	fmt.Println("SET FILE")
 
-
+	m := &models.UploadObject{
+		Description: "Desc",	 
+		Parent         : nil,
+		EncryptionMethod: nil,
+		Public    		:true,
+		Filename  		: "DATA.txt",
+		Extension 	     : ".txt",
+		Hash      	      :"HASH",
+		Size      		  : 22,
+		Unit      		  :"Bytes",
+		UserOwner         : nil,
 	}
+
+	
 
 	bytes,err := os.ReadFile(file)
 	if err != nil {

@@ -21,7 +21,7 @@ func (c *storageSystemClient) FetchFiles(jwt *string)([]models.Object, error){
 func (c *storageSystemClient) GetFile(object models.Object, jwt *string)([]byte, error){
 	return c.repository.FetchFile(object,jwt)
 }
-func (c *storageSystemClient) PutFile(object models.Object, data []byte, jwt *string)(uuid.UUID, error){
+func (c *storageSystemClient) PutFile(object models.UploadObject, data []byte, jwt *string)(uuid.UUID, error){
 	return c.repository.PutObject(object,data,jwt)
 }
 func (c *storageSystemClient) RemoveFile(object models.Object,jwt *string) error {
